@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>My Profile - Kidan Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="src/lenis.css?v=1.3.23"/>
+  <link rel="stylesheet" href="style.css"/>
+  <script>
+    // Apply saved theme before first paint (shared across all pages)
+    (function () {
+      try {
+        if (localStorage.getItem('kidan-theme') === 'dark')
+          document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    /* ── PROFILE PAGE STYLES ── */
+
+    .profile-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── CARD BASE ── */
+    .p-card {
+      background: #fff;
+      border: 1px solid rgba(139, 92, 246, 0.13);
+      border-radius: 20px;
+      padding: 36px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .p-card-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      color: #7c3aed;
+      margin-bottom: 24px;
+    }
+
+    /* ── AVATAR SECTION ── */
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .avatar-ring {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .avatar-img {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(139, 92, 246, 0.25);
+      background: #ede9fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .avatar-placeholder {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 3px solid rgba(139, 92, 246, 0.25);
+      background: linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .avatar-placeholder:hover { border-color: #7c3aed; }
+
+    .avatar-placeholder svg {
+      color: #7c3aed;
+      opacity: 0.5;
+    }
+
+    .avatar-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+
+    .avatar-placeholder img.loaded { display: block; }
+
+    .avatar-edit-btn {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 28px;
+      height: 28px;
+      background: #7c3aed;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .avatar-edit-btn:hover { background: #6d28d9; transform: scale(1.1); }
+
+    .avatar-edit-btn svg { color: #fff; }
+
+    #avatar-input { display: none; }
+
+    .avatar-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 4px;
+    }
+
+    .avatar-info p {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .avatar-info .member-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ede9fe;
+      color: #7c3aed;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 8px;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field-grid.full { grid-template-columns: 1fr; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: #111;
+      background: #fafafa;
+      border: 1.5px solid rgba(139, 92, 246, 0.18);
+      border-radius: 10px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      resize: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      background: #fff;
+    }
+
+    .field textarea { min-height: 88px; line-height: 1.6; }
+
+    .field-hint {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    /* ── SAVE BUTTON ── */
+    .save-btn {
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .save-btn:hover {
+      background: #6d28d9;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+    }
+
+    .save-btn:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: transparent;
+      color: #6b7280;
+      border: 1.5px solid rgba(139, 92, 246, 0.2);
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover { border-color: #7c3aed; color: #7c3aed; }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── STATS ROW ── */
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .pstat {
+      background: #fff;
+      border: 1px solid rgba(139, 92, 246, 0.13);
+      border-radius: 16px;
+      padding: 22px 18px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pstat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: #7c3aed;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .pstat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* ── DANGER ZONE ── */
+    .danger-zone {
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .danger-zone .p-card-title { color: #ef4444; }
+
+    .danger-text {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: #ef4444;
+      border: 1.5px solid rgba(239, 68, 68, 0.3);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: #fef2f2;
+      border-color: #ef4444;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #111;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 22px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 9999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-dot { width: 8px; height: 8px; background: #7c3aed; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .profile-stats { grid-template-columns: repeat(2, 1fr); }
+      .avatar-row { flex-direction: column; text-align: center; align-items: center; }
+      .p-card { padding: 24px 20px; }
+
+      /* 16px so iOS doesn't zoom in on focus */
+      .field input,
+      .field textarea,
+      .field select { font-size: 16px; }
+
+      .toast {
+        left: 16px;
+        right: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom));
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-wrap { padding: 28px 14px 64px; }
+      .pstat { padding: 16px 12px; }
+      .pstat-val { font-size: 22px; }
+      .btn-row { flex-direction: column; align-items: stretch; }
+      .save-btn,
+      .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+
+    /* ── DARK THEME (profile-specific) ── */
+    html[data-theme="dark"] .p-card,
+    html[data-theme="dark"] .pstat {
+      background: #1b1530;
+      border-color: rgba(139, 92, 246, 0.22);
+    }
+    html[data-theme="dark"] .avatar-info h2 { color: #f3f0fb; }
+    html[data-theme="dark"] .avatar-info p { color: #a99fbb; }
+    html[data-theme="dark"] .field label { color: #cabfe0; }
+    html[data-theme="dark"] .field input,
+    html[data-theme="dark"] .field textarea,
+    html[data-theme="dark"] .field select {
+      background: #241c3a;
+      color: #f3f0fb;
+      border-color: rgba(139, 92, 246, 0.25);
+    }
+    html[data-theme="dark"] .field input:focus,
+    html[data-theme="dark"] .field textarea:focus,
+    html[data-theme="dark"] .field select:focus {
+      background: #2a2140;
+    }
+    html[data-theme="dark"] .field-hint { color: #8a7fa3; }
+    html[data-theme="dark"] .btn-secondary { color: #a99fbb; }
+    html[data-theme="dark"] .danger-text { color: #a99fbb; }
+    html[data-theme="dark"] .btn-danger:hover { background: rgba(239, 68, 68, 0.12); }
+  </style>
+</head>
+<body>
+
+  <!-- Background patterns (same as index.html) -->
+  <div id="bg-patterns" aria-hidden="true">
+    <div class="bp r1"></div>
+    <div class="bp r2"></div>
+    <div class="bp r3"></div>
+    <div class="bp r4"></div>
+    <div class="bp b1"></div>
+    <div class="bp b2"></div>
+    <div class="bp b3"></div>
+    <div class="bp dg1"></div>
+    <div class="bp dg2"></div>
+    <div class="bp ln1"></div>
+    <div class="bp ln2"></div>
+    <div class="bp ln3"></div>
+    <div class="bp cross1"></div>
+    <div class="bp cross2"></div>
+  </div>
+
+  <!-- Nav (same as index.html) -->
+  <nav class="filter-bar" aria-label="Main navigation">
+    <div class="nav-top">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-kidan">Kidan</span><span class="brand-shop"> Shop</span>
+      </a>
+
+
+
+      <div class="nav-icons">
+        <button type="button" class="sell-btn" data-open-listing>+ Sell<span class="sell-label">Item</span></button>
+        <button type="button" class="nav-icon-btn theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="icon-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button type="button" class="nav-icon-btn" aria-label="Support" title="Support">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="nav-icon-btn" aria-label="Wishlist" title="Wishlist" style="position:relative">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span class="nav-badge">0</span>
+        </button>
+        <a href="./profile.html" class="nav-icon-btn" aria-label="Profile" title="My Profile" style="color:#7c3aed; background:rgba(124,58,237,0.1);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main>
+    <div class="profile-wrap">
+
+      <!-- Stats -->
+      <div class="profile-stats">
+        <div class="pstat">
+          <div class="pstat-val">0</div>
+          <div class="pstat-label">Listings</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-val">0</div>
+          <div class="pstat-label">Sold</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-val">-</div>
+          <div class="pstat-label">Rating</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-val" data-wishlist-count>0</div>
+          <div class="pstat-label">Wishlist</div>
+        </div>
+      </div>
+
+      <!-- Avatar + name card -->
+      <div class="p-card">
+        <div class="p-card-title">Profile</div>
+        <div class="avatar-row">
+          <div class="avatar-ring">
+            <div class="avatar-placeholder" id="avatarCircle" onclick="document.getElementById('avatar-input').click()" title="Upload photo">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              <img id="avatarPreview" alt="Avatar"/>
+            </div>
+            <button class="avatar-edit-btn" onclick="document.getElementById('avatar-input').click()" title="Change photo" aria-label="Change profile photo">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <input type="file" id="avatar-input" accept="image/*"/>
+          </div>
+          <div class="avatar-info">
+            <h2 id="display-name">Your name</h2>
+            <p id="display-email">email@example.com</p>
+            <span class="member-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              New member
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal info -->
+      <div class="p-card">
+        <div class="p-card-title">Personal Information</div>
+        <div class="field-grid" style="margin-bottom:16px">
+          <div class="field">
+            <label for="first-name">First name</label>
+            <input type="text" id="first-name" placeholder="John" autocomplete="given-name"/>
+          </div>
+          <div class="field">
+            <label for="last-name">Last name</label>
+            <input type="text" id="last-name" placeholder="Smith" autocomplete="family-name"/>
+          </div>
+          <div class="field">
+            <label for="username">Username (shown publicly)</label>
+            <input type="text" id="username" placeholder="@johnsmith" autocomplete="username"/>
+            <span class="field-hint">Other buyers and sellers can see it.</span>
+          </div>
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" placeholder="+1 555 000 0000" autocomplete="tel"/>
+          </div>
+        </div>
+        <div class="field-grid full" style="margin-bottom:24px">
+          <div class="field">
+            <label for="bio">About me</label>
+            <textarea id="bio" placeholder="A short bio: what you sell, what you like, and how you ship."></textarea>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveProfile()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save Changes
+          </button>
+          <button class="btn-secondary" onclick="resetProfile()">Discard</button>
+        </div>
+      </div>
+
+      <div class="p-card">
+        <div class="p-card-title">Selling</div>
+        <p class="danger-text">Create a new marketplace listing directly from your profile.</p>
+        <button type="button" class="save-btn" data-open-listing>+ Add Listing</button>
+      </div>
+
+      <!-- Location -->
+      <div class="p-card">
+        <div class="p-card-title">Location</div>
+        <div class="field-grid" style="margin-bottom:24px">
+          <div class="field">
+            <label for="city">City</label>
+            <input type="text" id="city" placeholder="Prague" autocomplete="address-level2"/>
+          </div>
+          <div class="field">
+            <label for="region">Region</label>
+            <select id="region">
+              <option value="">Choose region</option>
+              <option>Prague</option>
+              <option>Central Bohemian</option>
+              <option>South Bohemian</option>
+              <option>Pilsen</option>
+              <option>Karlovy Vary</option>
+              <option>Usti nad Labem</option>
+              <option>Liberec</option>
+              <option>Hradec Kralove</option>
+              <option>Pardubice</option>
+              <option>Vysocina</option>
+              <option>South Moravian</option>
+              <option>Olomouc</option>
+              <option>Zlin</option>
+              <option>Moravian-Silesian</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="showToast('Location saved')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save
+          </button>
+        </div>
+      </div>
+
+      <!-- Security -->
+      <div class="p-card">
+        <div class="p-card-title">Login Details</div>
+        <div class="field-grid" style="margin-bottom:16px">
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" placeholder="jan@example.com" autocomplete="email"/>
+          </div>
+          <div class="field">
+            <label for="new-password">New password</label>
+            <input type="password" id="new-password" placeholder="••••••••" autocomplete="new-password"/>
+            <span class="field-hint">At least 8 characters.</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="showToast('Login details saved')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Save Password
+          </button>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="p-card danger-zone">
+        <div class="p-card-title">Danger Zone</div>
+        <p class="danger-text">Deleting your account is permanent. All of your listings, messages, and reviews will be removed.</p>
+        <button class="btn-danger">Delete Account</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-dot"></span>
+    <span id="toast-msg">Changes saved</span>
+  </div>
+
+  <div class="listing-modal" id="listingModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-listing></div>
+    <section class="listing-dialog" role="dialog" aria-modal="true" aria-labelledby="listingTitle">
+      <button type="button" class="modal-close" aria-label="Close listing form" data-close-listing>×</button>
+      <p class="modal-eyebrow">Sell on Kidan Shop</p>
+      <h2 id="listingTitle">Create a Listing</h2>
+      <form class="listing-form" id="listingForm">
+        <div class="form-grid">
+          <label>Item title
+            <input type="text" name="title" placeholder="Nike Air Max 90" required>
+          </label>
+          <label>Brand
+            <input type="text" name="brand" placeholder="Nike, Adidas, Supreme..." required>
+          </label>
+          <label>Category
+            <select name="category" required>
+              <option value="">Choose category</option>
+              <option>Sneakers</option>
+              <option>Hoodies</option>
+              <option>Jackets</option>
+              <option>T-Shirts</option>
+              <option>Accessories</option>
+            </select>
+          </label>
+          <label>Condition
+            <select name="condition" required>
+              <option value="">Choose condition</option>
+              <option>New with tags</option>
+              <option>New without tags</option>
+              <option>Used - excellent</option>
+              <option>Used - good</option>
+            </select>
+          </label>
+          <label>Price
+            <input type="number" name="price" min="1" placeholder="120" required>
+          </label>
+          <label>Size
+            <input type="text" name="size" placeholder="M, L, EU 42...">
+          </label>
+        </div>
+        <label>Description
+          <textarea name="description" placeholder="Describe the item, fit, flaws, and shipping details." required></textarea>
+        </label>
+        <label class="photo-upload-field">Photos
+          <input type="file" name="photos" accept="image/*" multiple>
+          <span class="field-note">Add several photos. The first image will be used as the main listing photo.</span>
+          <span class="photo-count" data-photo-count>No photos selected</span>
+        </label>
+        <div class="photo-preview-grid" data-photo-preview>
+          <div class="photo-preview-empty">Selected photos will appear here</div>
+        </div>
+        <button type="submit" class="modal-submit">Publish Listing</button>
+      </form>
+    </section>
+  </div>
+
+  <script src="src/lenis.min.js?v=1.3.23"></script>
+  <script src="script.js?v=3"></script>
+  <script>
+    /* ── AVATAR UPLOAD ── */
+    document.getElementById('avatar-input').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = document.getElementById('avatarPreview');
+        img.src = e.target.result;
+        img.classList.add('loaded');
+        // hide placeholder icon
+        document.querySelector('#avatarCircle svg').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    /* ── SAVE PROFILE ── */
+    function saveProfile() {
+      const first = document.getElementById('first-name').value.trim();
+      const last  = document.getElementById('last-name').value.trim();
+      const user  = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      const displayName = [first, last].filter(Boolean).join(' ') || user || 'Your name';
+      document.getElementById('display-name').textContent = displayName;
+      if (email) document.getElementById('display-email').textContent = email;
+
+      showToast('Profile saved');
+    }
+
+    /* ── RESET ── */
+    function resetProfile() {
+      ['first-name','last-name','username','phone','bio'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      showToast('Changes discarded');
+    }
+
+    /* ── TOAST ── */
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+  </script>
+</body>
+</html>

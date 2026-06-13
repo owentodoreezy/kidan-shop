@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Shop by Category | Hype Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/lenis.css?v=1.3.23">
+    <link rel="stylesheet" href="style.css">
+    <script>
+      // Apply saved theme before first paint (shared across all pages)
+      (function () {
+        try {
+          if (localStorage.getItem('kidan-theme') === 'dark')
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } catch (e) {}
+      })();
+    </script>
+</head>
+<body>
+    <!-- Filter Bar (Sticky) — MUST be first child for sticky to work -->
+    <nav class="filter-bar" aria-label="Category filters" style="position:sticky;top:0;z-index:9999;">
+        <div class="nav-top">
+            <a href="#" class="nav-brand">
+                <span class="brand-kidan">Kidan</span><span class="brand-shop"> Shop</span>
+            </a>
+
+            <div class="nav-quality-bar">
+                <button class="qbtn active" data-q="all">All</button>
+                <button class="qbtn" data-q="new">New</button>
+                <button class="qbtn" data-q="used">Used</button>
+                <button class="qbtn" data-q="sale">Sale</button>
+            </div>
+
+            <div class="nav-icons">
+                <button type="button" class="sell-btn" data-open-listing>+ Sell<span class="sell-label">Item</span></button>
+                <button type="button" class="nav-icon-btn theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+                    <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                    <svg class="icon-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <button type="button" class="nav-icon-btn" aria-label="Support" title="Support" data-open-support>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                        <circle cx="12" cy="17" r=".5" fill="currentColor"/>
+                    </svg>
+                </button>
+                <button class="nav-icon-btn" aria-label="Wishlist" title="Wishlist" style="position:relative">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span class="nav-badge">0</span>
+                </button>
+                <a href="./profile.html" class="nav-icon-btn" aria-label="Profile" title="My Profile">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Background decorative patterns -->
+    <div id="bg-patterns" aria-hidden="true">
+        <div class="bp r1"></div>
+        <div class="bp r2"></div>
+        <div class="bp r3"></div>
+        <div class="bp r4"></div>
+        <div class="bp b1"></div>
+        <div class="bp b2"></div>
+        <div class="bp b3"></div>
+        <div class="bp dg1"></div>
+        <div class="bp dg2"></div>
+        <div class="bp ln1"></div>
+        <div class="bp ln2"></div>
+        <div class="bp ln3"></div>
+        <div class="bp cross1"></div>
+        <div class="bp cross2"></div>
+    </div>
+
+    <!-- Page Header / Hero -->
+    <header class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <span class="header-eyebrow">Hype Marketplace</span>
+                <h1 class="page-title">Kidan <span class="accent">Shop</span></h1>
+                <p class="page-subtitle">Discover thousands of streetwear, sneakers, and vintage finds from top brands and independent sellers</p>
+
+                <div class="header-search">
+                    <div class="search-wrap">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <input type="search" class="search-input" placeholder="Search Nike, Supreme, Adidas...">
+                        <button class="search-submit-btn">Search</button>
+                    </div>
+                </div>
+
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <strong data-stat="items">0</strong>
+                        <span>Items</span>
+                    </div>
+                    <div class="stat-sep"></div>
+                    <div class="stat-item">
+                        <strong data-stat="sales">0</strong>
+                        <span>Sales</span>
+                    </div>
+                    <div class="stat-sep"></div>
+                    <div class="stat-item">
+                        <strong data-stat="brands">0</strong>
+                        <span>Brands</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Trust strip -->
+    <section class="trust-strip" aria-label="Why buy on Kidan Shop">
+      <div class="trust-item">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div><strong>Buyer Protection</strong><span>Money back if it's not as described</span></div>
+      </div>
+      <div class="trust-item">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div><strong>Verified Sellers</strong><span>Every seller is identity-checked</span></div>
+      </div>
+      <div class="trust-item">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <div><strong>Tracked Shipping</strong><span>Every order ships with tracking</span></div>
+      </div>
+      <div class="trust-item">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <div><strong>Easy Returns</strong><span>3-day return window on all items</span></div>
+      </div>
+    </section>
+
+    <div class="search-bar-wrap">
+      <div class="search-bar-inner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" id="brand-search" placeholder="Search brands, items..." autocomplete="off"/>
+        <kbd>Ctrl K</kbd>
+      </div>
+    </div>
+
+    <!-- Category chips -->
+    <div class="cat-chips" id="catChips" aria-label="Item categories">
+      <button class="chip active" data-cat="all">All</button>
+      <button class="chip" data-cat="sneakers">👟 Sneakers</button>
+      <button class="chip" data-cat="hoodies">👕 Hoodies & Tees</button>
+      <button class="chip" data-cat="jackets">🧥 Jackets</button>
+      <button class="chip" data-cat="accessories">🧢 Accessories</button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="categories-section">
+        <div class="container">
+            <!-- Price Filter & Sort Bar -->
+            
+
+            <!-- Top Brands Section -->
+            <section class="brands-section top-brands">
+                <div class="section-header">
+                    <div class="section-header-text">
+                        <h2 class="section-title">Top <span class="accent">Brands</span></h2>
+                        <p class="section-description">Premium streetwear and lifestyle labels</p>
+                    </div>
+                    <a href="#" class="view-all-link">
+                        View all
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <div class="categories-grid" id="topBrandsGrid">
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new">
+                        <span class="card-tag hot-tag">🔥 Hot</span>
+                        <div class="card-logo-area">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nike.svg" alt="Nike" class="brand-logo-img">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Nike</h3>
+                            <span class="item-badge">1,204 items</span>
+                            <span class="live-viewers">
+                              <span class="live-dot"></span>
+                              <span class="live-num">0</span> viewing
+                            </span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used">
+                        <span class="card-badge badge-hot">🔥 Hot</span>
+                        <div class="card-logo-area">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/adidas.svg" alt="Adidas" class="brand-logo-img">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Adidas</h3>
+                            <span class="item-badge">987 items</span>
+                            <span class="live-viewers">
+                              <span class="live-dot"></span>
+                              <span class="live-num">0</span> viewing
+                            </span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used sale">
+                        <span class="card-tag sale-tag">🏷 Sale</span>
+                        <div class="card-logo-area">
+                            <img src="src/logo-supreme.png" alt="Supreme" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Supreme</h3>
+                            <span class="item-badge">542 items</span>
+                            <span class="live-viewers">
+                              <span class="live-dot"></span>
+                              <span class="live-num">0</span> viewing
+                            </span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all used">
+                        <span class="card-badge badge-new">✦ New</span>
+                        <div class="card-logo-area">
+                            <img src="src/logo-stone-island.png" alt="Stone Island" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Stone Island</h3>
+                            <span class="item-badge">376 items</span>
+                            <span class="live-viewers">
+                              <span class="live-dot"></span>
+                              <span class="live-num">0</span> viewing
+                            </span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used">
+                        <div class="card-logo-area">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/thenorthface.svg" alt="The North Face" class="brand-logo-img">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">The North Face</h3>
+                            <span class="item-badge">823 items</span>
+                            <span class="live-viewers">
+                              <span class="live-dot"></span>
+                              <span class="live-num">0</span> viewing
+                            </span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used sale">
+                        <div class="card-logo-area">
+                            <img src="src/logo-stussy.png" alt="Stüssy" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Stüssy</h3>
+                            <span class="item-badge">512 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used">
+                        <div class="card-logo-area">
+                            <img src="src/logo-carhartt.png" alt="Carhartt" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Carhartt</h3>
+                            <span class="item-badge">698 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new">
+                        <div class="card-logo-area">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/puma.svg" alt="Puma" class="brand-logo-img">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Puma</h3>
+                            <span class="item-badge">654 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used sale">
+                        <span class="card-tag new-tag">✨ New</span>
+                        <div class="card-logo-area">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/newbalance.svg" alt="New Balance" class="brand-logo-img">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">New Balance</h3>
+                            <span class="item-badge">876 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used">
+                        <div class="card-logo-area">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/reebok.svg" alt="Reebok" class="brand-logo-img">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Reebok</h3>
+                            <span class="item-badge">445 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used">
+                        <div class="card-logo-area">
+                            <img src="src/logo-vans.png" alt="Vans" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Vans</h3>
+                            <span class="item-badge">723 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used sale">
+                        <div class="card-logo-area">
+                            <img src="src/logo-converse.png" alt="Converse" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Converse</h3>
+                            <span class="item-badge">812 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used">
+                        <div class="card-logo-area">
+                            <img src="src/logo-levis.png" alt="Levi's" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Levi's</h3>
+                            <span class="item-badge">934 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used sale">
+                        <div class="card-logo-area">
+                            <img src="src/logo-champion.png" alt="Champion" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Champion</h3>
+                            <span class="item-badge">567 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card" data-filter="all new used">
+                        <div class="card-logo-area">
+                            <img src="src/logo-tommy-hilfiger.png" alt="Tommy Hilfiger" class="brand-logo-img brand-logo-img--color">
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Tommy Hilfiger</h3>
+                            <span class="item-badge">443 items</span>
+                        </div>
+                    </article>
+                    </a>
+                </div>
+                <div class="grid-empty" id="brandsEmpty" hidden>No brands found. Try a different search.</div>
+            </section>
+
+            <!-- Independent / No Brand Section -->
+            <section class="brands-section independent-brands">
+                <div class="section-header">
+                    <div class="section-header-text">
+                        <h2 class="section-title">No Brand / <span class="accent">Independent</span></h2>
+                        <p class="section-description">Vintage, thrifted, and unique finds from independent sellers</p>
+                    </div>
+                    <a href="#" class="view-all-link">
+                        View all
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+                <div class="categories-grid independent-grid" id="independentGrid">
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card independent-card" data-filter="all used sale">
+                        <span class="card-tag hot-tag">🔥 Popular</span>
+                        <div class="card-logo-area">
+                            <div class="cat-icon-wrap">
+  <div class="letter-avatar" style="background:#ede9fe;">
+    <span style="color:#7c3aed;font-family:'Playfair Display',serif;font-size:28px;font-weight:900;font-style:italic;">V</span>
+  </div>
+</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Vintage Finds</h3>
+                            <span class="item-badge">3,204 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card independent-card" data-filter="all used">
+                        <div class="card-logo-area">
+                            <div class="cat-icon-wrap">
+  <div class="letter-avatar" style="background:#ede9fe;">
+    <span style="color:#7c3aed;font-family:'Playfair Display',serif;font-size:28px;font-weight:900;font-style:italic;">T</span>
+  </div>
+</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Thrifted Fashion</h3>
+                            <span class="item-badge">2,156 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card independent-card" data-filter="all new">
+                        <div class="card-logo-area">
+                            <div class="cat-icon-wrap">
+  <div class="letter-avatar" style="background:#ede9fe;">
+    <span style="color:#7c3aed;font-family:'Playfair Display',serif;font-size:28px;font-weight:900;font-style:italic;">D</span>
+  </div>
+</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Designer Reps</h3>
+                            <span class="item-badge">1,843 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card independent-card" data-filter="all new used">
+                        <div class="card-logo-area">
+                            <div class="cat-icon-wrap">
+  <div class="letter-avatar" style="background:#ede9fe;">
+    <span style="color:#7c3aed;font-family:'Playfair Display',serif;font-size:28px;font-weight:900;font-style:italic;">H</span>
+  </div>
+</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Handmade Items</h3>
+                            <span class="item-badge">987 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card independent-card" data-filter="all used sale">
+                        <div class="card-logo-area">
+                            <div class="cat-icon-wrap">
+  <div class="letter-avatar" style="background:#ede9fe;">
+    <span style="color:#7c3aed;font-family:'Playfair Display',serif;font-size:28px;font-weight:900;font-style:italic;">U</span>
+  </div>
+</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Unbranded Basics</h3>
+                            <span class="item-badge">2,543 items</span>
+                        </div>
+                    </article>
+                    </a>
+
+                    <a href="./coming-soon.html" class="brand-card-link">
+                    <article class="category-card independent-card" data-filter="all new">
+                        <div class="card-logo-area">
+                            <div class="cat-icon-wrap">
+  <div class="letter-avatar" style="background:#ede9fe;">
+    <span style="color:#7c3aed;font-family:'Playfair Display',serif;font-size:28px;font-weight:900;font-style:italic;">L</span>
+  </div>
+</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="brand-name">Local Brands</h3>
+                            <span class="item-badge">1,654 items</span>
+                        </div>
+                    </article>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Featured Items Section -->
+    <section class="featured-section">
+      <div class="featured-header">
+        <div>
+          <h2 class="featured-title">Featured <em>Items</em></h2>
+          <p class="featured-sub">Hand-picked pieces from top sellers</p>
+        </div>
+        <div class="featured-actions">
+          <button type="button" class="sort-btn" data-sort="asc">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            Price: Low → High
+          </button>
+          <button type="button" class="sort-btn" data-sort="desc">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            High → Low
+          </button>
+          <a href="./coming-soon.html" class="view-all-btn">View all →</a>
+        </div>
+      </div>
+      <div class="featured-grid">
+
+        <a href="./coming-soon.html" class="item-card" data-price="52" data-cond="used" data-cat="sneakers">
+          <div class="item-img-wrap">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" alt="Nike sneakers" class="item-img" loading="lazy"/>
+            <span class="item-badge-condition">Used</span>
+          </div>
+          <div class="item-info">
+            <span class="item-brand">Nike</span>
+            <p class="item-name">Air Max 90 — White/Red</p>
+            <span class="item-meta">Size EU 42 · Very good</span>
+            <div class="item-bottom">
+              <span class="item-price">$52</span>
+              <button class="item-like" aria-label="Like">♡</button>
+            </div>
+          </div>
+        </a>
+
+        <a href="./coming-soon.html" class="item-card" data-price="195" data-cond="new" data-cat="hoodies">
+          <div class="item-img-wrap">
+            <img src="https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=400&q=80" alt="Hoodie" class="item-img" loading="lazy"/>
+            <span class="item-badge-condition new-cond">New</span>
+          </div>
+          <div class="item-info">
+            <span class="item-brand">Supreme</span>
+            <p class="item-name">Box Logo Hoodie — Red</p>
+            <span class="item-meta">Size L · New with tags</span>
+            <div class="item-bottom">
+              <span class="item-price">$195</span>
+              <button class="item-like" aria-label="Like">♡</button>
+            </div>
+          </div>
+        </a>
+
+        <a href="./coming-soon.html" class="item-card" data-price="169" data-cond="new" data-cat="jackets">
+          <div class="item-img-wrap">
+            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&q=80" alt="Jacket" class="item-img" loading="lazy"/>
+            <span class="item-badge-condition new-cond">New</span>
+          </div>
+          <div class="item-info">
+            <span class="item-brand">The North Face</span>
+            <p class="item-name">Nuptse Jacket — Black</p>
+            <span class="item-meta">Size M · New with tags</span>
+            <div class="item-bottom">
+              <span class="item-price">$169</span>
+              <button class="item-like" aria-label="Like">♡</button>
+            </div>
+          </div>
+        </a>
+
+        <a href="./coming-soon.html" class="item-card" data-price="39" data-cond="used" data-cat="sneakers" data-sale="true">
+          <div class="item-img-wrap">
+            <img src="https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=400&q=80" alt="Sneakers" class="item-img" loading="lazy"/>
+            <span class="item-badge-condition sale-cond">-30%</span>
+          </div>
+          <div class="item-info">
+            <span class="item-brand">Vans</span>
+            <p class="item-name">Old Skool — Black/White</p>
+            <span class="item-meta">Size EU 41 · Good</span>
+            <div class="item-bottom">
+              <span class="item-price"><span class="item-price-old">$55</span>$39</span>
+              <button class="item-like" aria-label="Like">♡</button>
+            </div>
+          </div>
+        </a>
+
+        <a href="./coming-soon.html" class="item-card" data-price="95" data-cond="new" data-cat="jackets">
+          <div class="item-img-wrap">
+            <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80" alt="Jacket" class="item-img" loading="lazy"/>
+            <span class="item-badge-condition new-cond">New</span>
+          </div>
+          <div class="item-info">
+            <span class="item-brand">Carhartt</span>
+            <p class="item-name">Detroit Jacket — Brown</p>
+            <span class="item-meta">Size XL · New without tags</span>
+            <div class="item-bottom">
+              <span class="item-price">$95</span>
+              <button class="item-like" aria-label="Like">♡</button>
+            </div>
+          </div>
+        </a>
+
+        <a href="./coming-soon.html" class="item-card" data-price="121" data-cond="used" data-cat="sneakers">
+          <div class="item-img-wrap">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80" alt="Watch streetwear" class="item-img" loading="lazy"/>
+            <span class="item-badge-condition">Used</span>
+          </div>
+          <div class="item-info">
+            <span class="item-brand">Adidas</span>
+            <p class="item-name">Ultraboost 22 — Black</p>
+            <span class="item-meta">Size EU 44 · Excellent</span>
+            <div class="item-bottom">
+              <span class="item-price">$121</span>
+              <button class="item-like" aria-label="Like">♡</button>
+            </div>
+          </div>
+        </a>
+
+      </div>
+      <div class="grid-empty" id="featuredEmpty" hidden>Nothing matches these filters yet. Try another category or condition.</div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+      <div class="nl-inner">
+        <span class="nl-eyebrow">Stay in the loop</span>
+        <h2>Never miss a <em>drop</em></h2>
+        <p>Weekly digest: new grails, price drops and trending brands. No spam.</p>
+        <form id="newsletterForm">
+          <input type="email" placeholder="you@email.com" required aria-label="Email address"/>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="footer-cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Can't find your brand?</h2>
+                <p class="cta-sub">Browse over 50,000 listings from sellers across Europe</p>
+                <a href="#" class="cta-link">Browse all listings <span class="arrow">→</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="site-footer">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <span class="footer-logo">Kidan Shop</span>
+                <p class="footer-tagline">Premium & second-hand fashion.<br>New arrivals every day.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Sale</a></li>
+                    <li><a href="#" data-open-listing>Sell an Item</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>Email: support@kidanshop.com</li>
+                    <li>Phone: +1 555 123 4567</li>
+                    <li>Location: Prague, Czech Republic</li>
+                    <li>Hours: Mon-Fri, 9:00-18:00</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Info</h4>
+                <ul>
+                    <li><a href="#">How it works</a></li>
+                    <li><a href="#">Buyer protection</a></li>
+                    <li><a href="#">Privacy policy</a></li>
+                    <li><a href="#">Terms of service</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2025 Kidan Shop. All rights reserved.</span>
+            <span>Made with care in Czech Republic</span>
+        </div>
+    </footer>
+
+    <div class="listing-modal" id="listingModal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-listing></div>
+      <section class="listing-dialog" role="dialog" aria-modal="true" aria-labelledby="listingTitle">
+        <button type="button" class="modal-close" aria-label="Close listing form" data-close-listing>×</button>
+        <p class="modal-eyebrow">Sell on Kidan Shop</p>
+        <h2 id="listingTitle">Create a Listing</h2>
+        <form class="listing-form" id="listingForm">
+          <div class="form-grid">
+            <label>Item title
+              <input type="text" name="title" placeholder="Nike Air Max 90" required>
+            </label>
+            <label>Brand
+              <input type="text" name="brand" placeholder="Nike, Adidas, Supreme..." required>
+            </label>
+            <label>Category
+              <select name="category" required>
+                <option value="">Choose category</option>
+                <option>Sneakers</option>
+                <option>Hoodies</option>
+                <option>Jackets</option>
+                <option>T-Shirts</option>
+                <option>Accessories</option>
+              </select>
+            </label>
+            <label>Condition
+              <select name="condition" required>
+                <option value="">Choose condition</option>
+                <option>New with tags</option>
+                <option>New without tags</option>
+                <option>Used - excellent</option>
+                <option>Used - good</option>
+              </select>
+            </label>
+            <label>Price
+              <input type="number" name="price" min="1" placeholder="120" required>
+            </label>
+            <label>Size
+              <input type="text" name="size" placeholder="M, L, EU 42...">
+            </label>
+          </div>
+          <label>Description
+            <textarea name="description" placeholder="Describe the item, fit, flaws, and shipping details." required></textarea>
+          </label>
+          <label class="photo-upload-field">Photos
+            <input type="file" name="photos" accept="image/*" multiple>
+            <span class="field-note">Add several photos. The first image will be used as the main listing photo.</span>
+            <span class="photo-count" data-photo-count>No photos selected</span>
+          </label>
+          <div class="photo-preview-grid" data-photo-preview>
+            <div class="photo-preview-empty">Selected photos will appear here</div>
+          </div>
+          <button type="submit" class="modal-submit">Publish Listing</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="support-widget" id="supportWidget">
+      <button type="button" class="support-fab" aria-label="Toggle support chat" data-open-support>
+        <svg class="fab-icon-chat" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+        </svg>
+        <svg class="fab-icon-close" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <section class="support-panel" aria-hidden="true" aria-label="Support chat">
+        <div class="support-head">
+          <div>
+            <strong>Kidan Support</strong>
+            <span>Usually replies in a few minutes</span>
+          </div>
+          <button type="button" aria-label="Close support chat" data-close-support>×</button>
+        </div>
+        <div class="support-messages" id="supportMessages">
+          <p class="support-message support-agent">Hi! How can we help with buying or selling today?</p>
+        </div>
+        <form class="support-form" id="supportForm">
+          <input type="text" id="supportInput" placeholder="Write a message..." autocomplete="off" required>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+    </div>
+
+    <!-- Back to top -->
+    <button id="back-to-top" aria-label="Back to top" title="Back to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+
+    <script src="src/lenis.min.js?v=1.3.23"></script>
+    <script src="script.js?v=3"></script>
+    <script>
+    // Sticky nav shadow
+    (function(){
+      var nav = document.querySelector('nav.filter-bar');
+      if(!nav) return;
+      window.addEventListener('scroll', function(){
+        nav.style.boxShadow = window.scrollY > 8
+          ? '0 4px 24px rgba(124,58,237,0.12)'
+          : 'none';
+      }, {passive:true});
+    })();
+
+    // Live viewers random count
+    document.querySelectorAll('.live-num').forEach(function(el){
+      el.textContent = Math.floor(Math.random() * 28) + 3;
+    });
+
+    // Search: brands AND items, with empty state. Ctrl+K focuses it.
+    (function(){
+      var searchInput = document.getElementById('brand-search');
+      if(!searchInput) return;
+
+      searchInput.addEventListener('input', function(){
+        var q = this.value.toLowerCase().trim();
+
+        var brandHits = 0;
+        document.querySelectorAll('.brand-card-link').forEach(function(link){
+          var name = link.querySelector('.brand-name');
+          if(!name) return;
+          var show = !q || name.textContent.toLowerCase().includes(q);
+          link.style.display = show ? '' : 'none';
+          if(show) brandHits++;
+        });
+        var be = document.getElementById('brandsEmpty');
+        if(be) be.hidden = brandHits > 0;
+
+        var itemHits = 0;
+        document.querySelectorAll('.item-card').forEach(function(card){
+          var brand = card.querySelector('.item-brand');
+          var name = card.querySelector('.item-name');
+          var text = ((brand ? brand.textContent : '') + ' ' + (name ? name.textContent : '')).toLowerCase();
+          var show = !q || text.includes(q);
+          card.style.display = show ? '' : 'none';
+          if(show) itemHits++;
+        });
+        var fe = document.getElementById('featuredEmpty');
+        if(fe) fe.hidden = itemHits > 0;
+      });
+
+      document.addEventListener('keydown', function(e){
+        if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+          e.preventDefault();
+          searchInput.focus();
+          window.kidanScrollTo?.(searchInput, { offset: -160, block: 'center' });
+        }
+      });
+    })();
+    </script>
+</body>
+</html>

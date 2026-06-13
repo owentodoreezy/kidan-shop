@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Coming Soon – Kidan Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <script>
+    // Apply saved theme before first paint (shared across all pages)
+    (function () {
+      try {
+        if (localStorage.getItem('kidan-theme') === 'dark')
+          document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    .bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .bg .r1 { position:absolute;width:500px;height:500px;top:-150px;left:-150px;border-radius:50%;border:2px solid rgba(124,58,237,0.2);animation:spin 40s linear infinite; }
+    .bg .r2 { position:absolute;width:300px;height:300px;top:-50px;left:-30px;border-radius:50%;border:1.5px solid rgba(124,58,237,0.28);animation:spin 25s linear infinite reverse; }
+    .bg .r3 { position:absolute;width:200px;height:200px;bottom:20%;right:10%;border-radius:50%;border:1px solid rgba(124,58,237,0.22);animation:spin 32s linear infinite; }
+    .bg .b1 { position:absolute;width:400px;height:300px;bottom:10%;right:-80px;border-radius:60% 40% 55% 45%/50% 45% 55% 50%;border:1.5px solid rgba(124,58,237,0.18);animation:morph 18s ease-in-out infinite; }
+    .bg .dg { position:absolute;width:250px;height:250px;top:40%;right:10%;background-image:radial-gradient(circle,rgba(124,58,237,0.25) 2px,transparent 2px);background-size:22px 22px;animation:drift 18s ease-in-out infinite; }
+    .bg .dg2 { position:absolute;width:180px;height:180px;bottom:15%;left:12%;background-image:radial-gradient(circle,rgba(124,58,237,0.18) 1.5px,transparent 1.5px);background-size:18px 18px;animation:drift 24s ease-in-out infinite reverse; }
+    .bg .cross { position:absolute;width:50px;height:50px;top:30%;left:20%;border:2px solid rgba(124,58,237,0.25);transform:rotate(45deg);animation:spin 20s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes morph { 0%,100%{border-radius:60% 40% 55% 45%/50% 45% 55% 50%}50%{border-radius:40% 60% 45% 55%/55% 40% 60% 45%} }
+    @keyframes drift { 0%,100%{transform:translate(0,0)}50%{transform:translate(15px,-20px)} }
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 56px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .logo .k { color: #7c3aed; }
+    .logo .s { color: #111; }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(52px, 9vw, 100px);
+      font-weight: 900;
+      color: #111;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    h1 em { color: #7c3aed; font-style: normal; }
+    p {
+      font-size: 18px;
+      color: #888;
+      margin-bottom: 44px;
+      line-height: 1.7;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 36px;
+      background: #7c3aed;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .back-btn:hover { background: #6d28d9; transform: translateY(-2px); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 480px) {
+      .content { padding: 32px 20px; }
+      .logo { margin-bottom: 40px; }
+      h1 { font-size: clamp(40px, 13vw, 64px); }
+      p { font-size: 16px; margin-bottom: 36px; }
+      .back-btn { padding: 13px 28px; font-size: 14px; }
+    }
+
+    /* Short screens (landscape phones): allow scrolling */
+    @media (max-height: 640px) {
+      body { overflow: auto; padding: 24px 0; }
+    }
+
+    /* ── DARK THEME ── */
+    html[data-theme="dark"] body { background: #14101f; }
+    html[data-theme="dark"] h1 { color: #f3f0fb; }
+    html[data-theme="dark"] p { color: #a99fbb; }
+    html[data-theme="dark"] .logo .s { color: #f3f0fb; }
+  </style>
+</head>
+<body>
+  <div class="bg">
+    <div class="r1"></div>
+    <div class="r2"></div>
+    <div class="r3"></div>
+    <div class="b1"></div>
+    <div class="dg"></div>
+    <div class="dg2"></div>
+    <div class="cross"></div>
+  </div>
+  <div class="content">
+    <a href="./index.html" class="logo"><span class="k">Kidan</span><span class="s"> Shop</span></a>
+    <h1>Coming <em>Soon</em></h1>
+    <p>This section is under construction.<br/>Something great is on its way.</p>
+    <a href="./index.html" class="back-btn">← Back to categories</a>
+  </div>
+</body>
+</html>
